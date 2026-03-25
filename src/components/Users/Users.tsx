@@ -1,7 +1,9 @@
 import React from "react";
 import CardUser from "../CardUsers/CardUsers";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = (
+  process.env.REACT_APP_API_URL || "http://localhost:3000"
+).replace(/\/$/, "");
 
 const Users: React.FC = () => {
   const getAllUsers = async () => {

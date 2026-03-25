@@ -1,8 +1,12 @@
 import React from "react";
 import CardRol from "../CardRol/CardRol";
 
+const API_BASE_URL = (
+  process.env.REACT_APP_API_URL || "http://localhost:3000"
+).replace(/\/$/, "");
+
 const Rol: React.FC = () => {
-  const baseUrl = "http://localhost:3000/roles";
+  const baseUrl = `${API_BASE_URL}/roles`;
 
   const getRole = async ({ id }: any) => {
     const res = await fetch(`${baseUrl}/${id}`);

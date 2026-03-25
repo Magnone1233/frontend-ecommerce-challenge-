@@ -1,19 +1,58 @@
 import React from "react";
 import CardProducts from "../CardProducts/CardProducts";
 
+const API_BASE_URL = (
+  process.env.REACT_APP_API_URL || "http://localhost:3000"
+).replace(/\/$/, "");
+
+const getAuthHeaders = (includeContentType = false) => {
+  const token = localStorage.getItem("accessToken");
+
+  return {
+    ...(includeContentType ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
 const Products: React.FC = () => {
   const handleGetProduct = async (data: Record<string, string>) => {
-    const res = await fetch(`http://localhost:3000/products/${data.id}`);
+    const res = await fetch(`${API_BASE_URL}/product/${data.id}`);
     return res.json();
   };
 
   const handleCreateProduct = async (data: Record<string, string>) => {
-    const res = await fetch("http://localhost:3000/products", {
+    const res = await fetch(`${API_BASE_URL}/product/create`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      headers: getAuthHeaders(true),
+      body: JSON.stringify(data.body),
+    });
+
+    return res.json();
+  };
+
+  const handleAddProductDetails = async ({ id, body }: Record<string, any>) => {
+    const res = await fetch(`${API_BASE_URL}/product/${id}/details`, {
+      method: "POST",
+      headers: getAuthHeaders(true),
+      body: JSON.stringify(body),
+    });
+
+    return res.json();
+  };
+
+  const handleActivateProduct = async ({ id }: Record<string, string>) => {
+    const res = await fetch(`${API_BASE_URL}/product/${id}/activate`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+
+    return res.json();
+  };
+
+  const handleDeleteProduct = async ({ id }: Record<string, string>) => {
+    const res = await fetch(`${API_BASE_URL}/product/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
     });
 
     return res.json();
@@ -24,8 +63,8 @@ const Products: React.FC = () => {
       <div style={styles.cardWrapper}>
         <CardProducts
           method="GET"
-          title="LISTAR PRODUCTOS"
-          endpoint="products"
+          title="OBTENER PRODUCTO"
+          endpoint="product/:id"
           buttonText="Obtener"
           fields={[
             {
@@ -38,85 +77,67 @@ const Products: React.FC = () => {
           onSubmit={handleGetProduct}
         />
       </div>
-      <div style={styles.cardWrapper}>
-        <CardProducts
-          method="GET"
-          title="PRODUCTO POR ID"
-          endpoint="products"
-          buttonText="Obtener"
-          fields={[
-            {
-              label: "ID",
-              name: "id",
-              type: "text",
-              placeholder: "1",
-            },
-          ]}
-          onSubmit={handleGetProduct}
-        />
-      </div>
-
       <div style={styles.cardWrapper}>
         <CardProducts
           method="POST"
           title="CREAR PRODUCTO"
-          endpoint="products"
+          endpoint="product/create"
           buttonText="Crear Producto"
           fields={[
             {
-              label: "Title",
-              name: "title",
+              label: "Body (JSON)",
+              name: "body",
               type: "text",
-              placeholder: "Mi producto",
-            },
-            {
-              label: "Code",
-              name: "code",
-              type: "text",
-              placeholder: "PROD-001",
-            },
-            {
-              label: "CategoryId",
-              name: "categoryId",
-              type: "text",
-              placeholder: "1",
+              placeholder: `{
+  "categoryId": 1
+}`,
+              isJson: true,
             },
           ]}
           onSubmit={handleCreateProduct}
         />
 
         <CardProducts
-          method="PUT"
-          title="ACTUALIZAR PRODUCTO"
-          endpoint="products/:id"
-          buttonText="Actualizar"
+          method="POST"
+          title="AGREGAR DETALLES"
+          endpoint="product/:id/details"
+          buttonText="Guardar Detalles"
           fields={[
             { label: "ID", name: "id", type: "text" },
             {
               label: "Body (JSON)",
               name: "body",
               type: "text",
+              placeholder: `{
+  "name": "Detalle del producto"
+}`,
               isJson: true,
             },
           ]}
-          onSubmit={async ({ id, body }) => {
-            const res = await fetch(`http://localhost:3000/products/${id}`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
+          onSubmit={handleAddProductDetails}
+        />
 
-            return res.json();
-          }}
+        <CardProducts
+          method="POST"
+          title="ACTIVAR PRODUCTO"
+          endpoint="product/:id/activate"
+          buttonText="Activar"
+          fields={[
+            {
+              label: "ID",
+              name: "id",
+              type: "text",
+              placeholder: "1",
+            },
+          ]}
+          onSubmit={handleActivateProduct}
         />
       </div>
       <div style={styles.cardWrapper}>
         <CardProducts
           method="DELETE"
           title="ELIMINAR PRODUCTO"
-          endpoint="products/:id"
+          endpoint="product/:id"
           buttonText="Eliminar"
           fields={[
             {
@@ -126,7 +147,7 @@ const Products: React.FC = () => {
               placeholder: "1",
             },
           ]}
-          onSubmit={handleGetProduct}
+          onSubmit={handleDeleteProduct}
         />
       </div>
     </div>

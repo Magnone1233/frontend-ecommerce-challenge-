@@ -105,7 +105,7 @@ const CardProducts: React.FC<CardProductsProps> = ({
             {field.isJson ? (
               <textarea
                 name={field.name}
-                placeholder={`{\n  "title": "Nuevo producto"\n}`}
+                placeholder={field.placeholder || `{"title": "Nuevo producto"}`}
                 onChange={handleChange}
                 style={{
                   ...ui.input,
