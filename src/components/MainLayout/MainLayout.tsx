@@ -4,6 +4,7 @@ import Products from "../Products/Products";
 import Users from "../Users/Users";
 import Rol from "../Rol/Rol";
 import Login from "../Login/Login";
+import Inventory from "../Inventory/Inventory";
 
 const MainLayout: React.FC = () => {
   const [route, setRoute] = useState("products");
@@ -18,6 +19,8 @@ const MainLayout: React.FC = () => {
         return <Rol />;
       case "users":
         return <Users />;
+      case "inventory":
+        return <Inventory />;
       default:
         return <Login />;
     }

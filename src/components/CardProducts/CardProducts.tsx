@@ -10,7 +10,7 @@ type Field = {
 };
 
 type CardProductsProps = {
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   title: string;
   endpoint: string;
   fields?: Field[];
@@ -40,6 +40,8 @@ const CardProducts: React.FC<CardProductsProps> = ({
         return "#f59e0b";
       case "DELETE":
         return "#ef4444";
+      case "PATCH":
+        return "#f97316";
       default:
         return "#fff";
     }
@@ -62,7 +64,6 @@ const CardProducts: React.FC<CardProductsProps> = ({
     try {
       const parsedForm = { ...form };
 
-      // 👇 parse JSON fields automáticamente
       fields.forEach((f) => {
         if (f.isJson && parsedForm[f.name]) {
           parsedForm[f.name] = JSON.parse(parsedForm[f.name]);

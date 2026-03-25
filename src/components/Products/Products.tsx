@@ -1,18 +1,10 @@
 import React from "react";
 import CardProducts from "../CardProducts/CardProducts";
+import { getAuthHeaders } from "../Helpers/getAuthHeaders";
 
 const API_BASE_URL = (
   process.env.REACT_APP_API_URL || "http://localhost:3000"
 ).replace(/\/$/, "");
-
-const getAuthHeaders = (includeContentType = false) => {
-  const token = localStorage.getItem("accessToken");
-
-  return {
-    ...(includeContentType ? { "Content-Type": "application/json" } : {}),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
 
 const Products: React.FC = () => {
   const handleGetProduct = async (data: Record<string, string>) => {

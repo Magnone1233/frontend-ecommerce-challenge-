@@ -11,6 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate, current }) => {
     { label: "Products", key: "products" },
     { label: "Roles", key: "roles" },
     { label: "Users", key: "users" },
+    { label: "Inventory", key: "inventory" },
   ];
 
   return (
